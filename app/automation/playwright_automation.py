@@ -195,7 +195,25 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
     from app.automation.weekly_maintenance import scheduler
 
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
+        # Use headless=True for AWS EC2 (no GUI environment)
+        browser = p.chromium.launch(
+            headless=True,
+            args=[
+                '--no-sandbox',
+                '--disable-dev-shm-usage',
+                '--disable-gpu',
+                '--no-first-run',
+                '--no-zygote',
+                '--single-process',
+                '--disable-extensions',
+                '--disable-plugins',
+                '--disable-images',
+                '--disable-javascript',
+                '--disable-background-timer-throttling',
+                '--disable-backgrounding-occluded-windows',
+                '--disable-renderer-backgrounding'
+            ]
+        )
         context = browser.new_context()
         page = context.new_page()
 
@@ -286,6 +304,35 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
                     raise LoginError(error_msg)
                 
                 time.sleep(random.uniform(12, 18))  # Wait for login
+                
+                # Enhanced error detection after login
+                print(f"Checking login status for {username}...")
+                
+                # Check current URL and page content
+                current_url = page.url
+                page_title = page.title()
+                print(f"Current URL after login: {current_url}")
+                print(f"Page title after login: {page_title}")
+                
+                # Check for specific error messages in page content
+                page_content = page.content()
+                error_indicators = [
+                    'Invalid username or password',
+                    'Account locked',
+                    'Too many attempts',
+                    'CAPTCHA required',
+                    'Verification needed',
+                    'Security check',
+                    'Two-factor authentication',
+                    'Account suspended'
+                ]
+                
+                for indicator in error_indicators:
+                    if indicator.lower() in page_content.lower():
+                        error_msg = f"Login error detected: {indicator} for user '{username}'"
+                        print(error_msg)
+                        error_details.append(error_msg)
+                        raise LoginError(error_msg)
                 
                 # Check for login errors
                 is_error, error_msg = handle_login_errors(page, username)
