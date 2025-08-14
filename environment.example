@@ -1,0 +1,32 @@
+# FastAPI settings
+APP_NAME=Psychology Today Profile Automation System
+DEBUG=false
+
+# Database settings
+DATABASE_URL=sqlite:///./app.db
+
+# SMTP settings for email notifications
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=465
+SMTP_USERNAME=your_email@gmail.com
+SMTP_PASSWORD=your_app_password
+SENDER_EMAIL=your_email@gmail.com
+SENDER_NAME=Profile Automation System
+ADMIN_EMAIL=admin@example.com
+
+# AI API settings
+OPENAI_API_KEY=your-openai-api-key
+
+# Security
+SECRET_KEY=your-secret-key-here
+
+# Website URL (for Playwright automation)
+WEBSITE_URL=https://member.psychologytoday.com/us
+
+# JWT settings
+JWT_SECRET_KEY=your-jwt-secret-key
+JWT_ALGORITHM=HS256
+JWT_ACCESS_TOKEN_EXPIRE_DAYS=7
+
+# Fernet key for encryption
+FERNET_KEY=your-fernet-key-here

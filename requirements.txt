@@ -1,0 +1,37 @@
+# Web framework
+fastapi
+uvicorn  # ASGI server for FastAPI
+python-multipart  # For form data handling in FastAPI
+
+# Data validation and settings
+pydantic  # For data models
+pydantic-settings  # For environment variable management with Pydantic v2
+python-dotenv  # Load .env files
+
+# HTTP and browser automation
+httpx  # Async HTTP client
+selenium  # Browser automation (optional)
+playwright  # Browser automation (recommended)
+
+# AI integration
+openai>=1.0.0,<2.0.0  # Use OpenAI v1.x API (compatible with latest code)
+
+# Email and security
+email-validator  # For validating email addresses
+passlib  # Password hashing
+cryptography  # For password encryption in credential management
+python-jose[cryptography]  # JWT token handling
+bcrypt>=4.0.0  # Password hashing backend (compatible with passlib)
+
+# Database and migrations
+sqlalchemy  # ORM
+alembic  # DB migrations
+
+# Scheduling and automation
+schedule  # For task scheduling
+
+# Templating
+jinja2  # For dashboard templates
+
+# ---
+# Note: openai>=1.0.0 requires updated API usage in code. See https://github.com/openai/openai-python#migrating-from-v0-to-v1 
