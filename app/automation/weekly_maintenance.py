@@ -361,7 +361,7 @@ class WeeklyMaintenanceScheduler:
         # schedule.every().day.at("14:00").do(self.run_weekly_maintenance)
         # schedule.every(1).minutes.do(lambda: print("Test: ১ মিনিট হয়ে গেছে!"))
 
-        schedule.every(10).seconds.do(self.run_weekly_maintenance)
+        schedule.every(20).seconds.do(self.run_weekly_maintenance)
         
         # logger.info("Weekly maintenance scheduler started")
         # logger.info("Maintenance scheduled for every Sunday at 2:00 AM")
