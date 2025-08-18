@@ -354,14 +354,14 @@ class WeeklyMaintenanceScheduler:
         print("Scheduler started")
 
         # Schedule weekly maintenance (every Sunday at 2 AM)
-        # schedule.every().sunday.at("02:00").do(self.run_weekly_maintenance)
+        schedule.every().monday.at("03:30").do(self.run_weekly_maintenance)
 
         
         # Also schedule for immediate testing
         # schedule.every().day.at("14:00").do(self.run_weekly_maintenance)
         # schedule.every(1).minutes.do(lambda: print("Test: ১ মিনিট হয়ে গেছে!"))
 
-        schedule.every(30).seconds.do(self.run_weekly_maintenance)
+        # schedule.every(30).seconds.do(self.run_weekly_maintenance)
         
         # logger.info("Weekly maintenance scheduler started")
         # logger.info("Maintenance scheduled for every Sunday at 2:00 AM")
@@ -369,8 +369,8 @@ class WeeklyMaintenanceScheduler:
         # Run the scheduler loop
         while self.is_running:
             schedule.run_pending()
-            print("seconds passed - 2")
-            time.sleep(2)  # Check every 2 seconds
+            print("seconds passed - 10")
+            time.sleep(10)  # Check every 2 seconds
     
     def stop_scheduler(self):
         """Stop the scheduler."""
