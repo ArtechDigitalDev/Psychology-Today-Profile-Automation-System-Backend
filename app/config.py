@@ -21,11 +21,11 @@ class Settings(BaseSettings):
     # SMTP settings for email notifications
     SMTP_SERVER: str = "smtp.gmail.com"
     SMTP_PORT: int = 465
-    SMTP_USERNAME: str = "your_email@gmail.com"
-    SMTP_PASSWORD: str = "your_app_password"
-    SENDER_EMAIL: str = "your_email@gmail.com"
+    SMTP_USERNAME: str = "amy@wickerpsychotherapy.com"
+    SMTP_PASSWORD: str = "zwpx ryzx clvo ojos"
+    SENDER_EMAIL: str = "amy@wickerpsychotherapy.com"
     SENDER_NAME: str = "Profile Automation System"
-    ADMIN_EMAIL: str = "admin@example.com"
+    ADMIN_EMAIL: str = "amy@wickerpsychotherapy.com"
 
     # AI API settings
     OPENAI_API_KEY: str = "your-openai-api-key"
