@@ -195,27 +195,31 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
     from app.automation.weekly_maintenance import scheduler
 
     with sync_playwright() as p:
-        # Use headless=True for AWS EC2 (no GUI environment)
+        # Use headless=True for production, headless=False for debugging
         browser = p.chromium.launch(
-            headless=True,
+            headless=False,  # Use headless for better stability
             args=[
                 '--no-sandbox',
                 '--disable-dev-shm-usage',
                 '--disable-gpu',
                 '--no-first-run',
-                '--no-zygote',
-                '--single-process',
                 '--disable-extensions',
                 '--disable-plugins',
-                '--disable-images',
-                '--disable-javascript',
                 '--disable-background-timer-throttling',
                 '--disable-backgrounding-occluded-windows',
-                '--disable-renderer-backgrounding'
+                '--disable-renderer-backgrounding',
+                '--disable-web-security',
+                '--disable-features=VizDisplayCompositor',
+                '--disable-blink-features=AutomationControlled',
+                '--disable-ipc-flooding-protection'
             ]
         )
-        context = browser.new_context()
-        page = context.new_page()
+
+        page = browser.new_page()
+        
+        # Set longer timeouts
+        page.set_default_timeout(60000)  # 60 seconds
+        page.set_default_navigation_timeout(60000)  # 60 seconds
 
         try:
             # Step 1: Navigate to login page
@@ -245,7 +249,7 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
             # Step 2: Login process with error handling
             try:
                 # Human-like login behavior
-                time.sleep(random.uniform(2, 4))
+                time.sleep(random.uniform(2, 5))
                 
                 # Type username with human-like delays
                 try:
@@ -254,7 +258,7 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
                         raise ElementNotFoundError("Username field not found")
                     
                     username_field.click()
-                    time.sleep(random.uniform(0.5, 1.5))
+                    time.sleep(random.uniform(1,5))
                     for char in username:
                         page.keyboard.type(char)
                         time.sleep(random.uniform(0.05, 0.15))
@@ -265,7 +269,7 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
                     error_details.append(error_msg)
                     raise LoginError(error_msg)
                 
-                time.sleep(random.uniform(1, 3))
+                time.sleep(random.uniform(1, 5))
                 
                 # Type password with human-like delays
                 try:
@@ -274,7 +278,7 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
                         raise ElementNotFoundError("Password field not found")
                     
                     password_field.click()
-                    time.sleep(random.uniform(0.5, 1.5))
+                    time.sleep(random.uniform(1, 5))
                     for char in password:
                         page.keyboard.type(char)
                         time.sleep(random.uniform(0.05, 0.15))
@@ -285,7 +289,7 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
                     error_details.append(error_msg)
                     raise LoginError(error_msg)
                 
-                time.sleep(random.uniform(2, 4))
+                time.sleep(random.uniform(2, 5))
                 
                 # Click login button
                 try:
@@ -294,7 +298,7 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
                         raise ElementNotFoundError("Login button not found")
                     
                     login_button.hover()
-                    time.sleep(random.uniform(0.5, 1.5))
+                    time.sleep(random.uniform(1, 5))
                     login_button.click()
                     print(f"Login button clicked for {username}")
                 except Exception as e:
@@ -418,7 +422,7 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
                     raise NavigationError(error_msg)
             
             time.sleep(random.uniform(10, 15))
-
+        
             # Step 4: Extract Mental Health Role
             # try:
             #     mental_health_role_element = page.locator('.label-value-pair:has-text("Mental Health Role:") .value')
@@ -440,14 +444,14 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
             # Step 6: Update profile sections with error handling
             try:
                 # Update Personal Statement
-                try:
-                    personal_statement_updates = update_personal_statement(page, username)
-                    updated_fields.update(personal_statement_updates)
+                # try:
+                #     personal_statement_updates = update_personal_statement(page, username)
+                #     updated_fields.update(personal_statement_updates)
                     print(f"Personal statement updated for {username}")
-                except Exception as e:
-                    error_msg = f"Failed to update personal statement: {str(e)}"
-                    print(error_msg)
-                    error_details.append(error_msg)
+                # except Exception as e:
+                #     error_msg = f"Failed to update personal statement: {str(e)}"
+                #     print(error_msg)
+                #     error_details.append(error_msg)
 
                 # # Update Identity
                 # try:
@@ -459,47 +463,47 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
                 #     print(error_msg)
                 #     error_details.append(error_msg)
 
-                # Update Primary Location
-                try:
-                    primary_location_updates = update_primary_location2(page, username)
-                    updated_fields.update(primary_location_updates)
-                    print(f"Primary location updated for {username}")
-                except Exception as e:
-                    error_msg = f"Failed to update primary location: {str(e)}"
-                    print(error_msg)
-                    error_details.append(error_msg)
+                # # Update Primary Location
+                # try:
+                #     primary_location_updates = update_primary_location2(page, username)
+                #     updated_fields.update(primary_location_updates)
+                #     print(f"Primary location updated for {username}")
+                # except Exception as e:
+                #     error_msg = f"Failed to update primary location: {str(e)}"
+                #     print(error_msg)
+                #     error_details.append(error_msg)
 
 
-                # Update Availability
-                try:
-                    availability_updates = update_availability(page, username)
-                    updated_fields.update(availability_updates)
-                    print(f"Availability updated for {username}")
-                except Exception as e:
-                    error_msg = f"Failed to update availability: {str(e)}"
-                    print(error_msg)
-                    error_details.append(error_msg)
+                # # Update Availability
+                # try:
+                #     availability_updates = update_availability(page, username)
+                #     updated_fields.update(availability_updates)
+                #     print(f"Availability updated for {username}")
+                # except Exception as e:
+                #     error_msg = f"Failed to update availability: {str(e)}"
+                #     print(error_msg)
+                #     error_details.append(error_msg)
                 
-                # Update Specialties
-                try:
-                    specialties_updates = update_specialties(page, username)
-                    updated_fields.update(specialties_updates)
-                    print(f"Specialties updated for {username}")
-                except Exception as e:
-                    error_msg = f"Failed to update specialties: {str(e)}"
-                    print(error_msg)
-                    error_details.append(error_msg)
+                # # Update Specialties
+                # try:
+                #     specialties_updates = update_specialties(page, username)
+                #     updated_fields.update(specialties_updates)
+                #     print(f"Specialties updated for {username}")
+                # except Exception as e:
+                #     error_msg = f"Failed to update specialties: {str(e)}"
+                #     print(error_msg)
+                #     error_details.append(error_msg)
                 
-                # Update Top Specialties
-                try:
-                    # Generate AI content for top specialties
-                    top_specialties_updates = update_top_specialties(page, username)
-                    updated_fields.update(top_specialties_updates)
-                    print(f"Top specialties updated for {username}")
-                except Exception as e:
-                    error_msg = f"Failed to update top specialties: {str(e)}"
-                    print(error_msg)
-                    error_details.append(error_msg)
+                # # Update Top Specialties
+                # try:
+                #     # Generate AI content for top specialties
+                #     top_specialties_updates = update_top_specialties(page, username)
+                #     updated_fields.update(top_specialties_updates)
+                #     print(f"Top specialties updated for {username}")
+                # except Exception as e:
+                #     error_msg = f"Failed to update top specialties: {str(e)}"
+                #     print(error_msg)
+                #     error_details.append(error_msg)
 
             except Exception as e:
                 error_msg = f"Profile update failed: {str(e)}"
@@ -511,9 +515,25 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
             try:
                 time.sleep(random.uniform(8, 15))
                 
-                # Hover over profile image first
-                profile_image = page.locator('.src-components-header-profileImageWrapper-3AXi')
-                if profile_image.count() > 0:
+                # Hover over profile image first - try multiple selectors
+                profile_selectors = [
+                    '.src-components-header-profileImageWrapper-3AXi',
+                    '.src-components-header-text-2OQO', 
+                    '.src-components-header-profileAvatarWrapper-2Emx'
+                ]
+                
+                profile_image = None
+                for selector in profile_selectors:
+                    try:
+                        element = page.locator(selector)
+                        if element.count() > 0:
+                            profile_image = element
+                            print(f"Profile element found with selector '{selector}' for {username}")
+                            break
+                    except:
+                        continue
+                
+                if profile_image and profile_image.count() > 0:
                     profile_image.hover()
                     time.sleep(random.uniform(1, 3))
                     profile_image.click()
@@ -545,7 +565,6 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
         finally:
             # Always close browser
             try:
-                context.close()
                 browser.close()
                 print(f"Browser closed for {username}")
             except Exception as e:

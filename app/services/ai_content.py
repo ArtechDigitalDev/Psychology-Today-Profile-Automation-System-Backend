@@ -31,7 +31,8 @@ You are an expert psychologist and content writer specializing in mental health 
 **Task:** Make MINIMAL changes to content for Psychology Today profile.
 
 **STRICT REQUIREMENTS:**
-- Keep 95-99% of original content unchanged
+- Change ONLY ONE sentence at a time in each section
+- Keep ALL other sentences completely unchanged
 - Maintain original character count as much as possible
 - Only adjust tone for warmth and professionalism
 - DO NOT summarize or condense
@@ -43,6 +44,7 @@ You are an expert psychologist and content writer specializing in mental health 
 - DO NOT combine multiple sentences into one
 - Maintain exact sentence structure and flow
 - The tone must be warm and empathetic
+- CRITICAL: Select only ONE sentence to modify per section, leave all others identical
 
 **CHARACTER LIMITS (MAXIMUM):**
 - ideal_client: MAX 600 chars
@@ -55,11 +57,11 @@ You are an expert psychologist and content writer specializing in mental health 
 - empathy_invitation: "{empathy_invitation}"
 
 **Instructions:**
-1. Keep almost all original content
-2. Make only small tone adjustments
-3. Count characters exactly
-4. Maintain original character count
-5. Preserve exact same number of words and sentences
+1. Identify ONE sentence in each section that needs improvement
+2. Modify ONLY that one sentence for better tone/warmth
+3. Keep ALL other sentences exactly the same
+4. Count characters exactly
+5. Maintain original character count
 6. Only trim if exceeds maximum limits
 
 Return JSON with these keys:
@@ -70,10 +72,10 @@ Return JSON with these keys:
 }}
 """
 
-        system_message = """You are a content editor for Psychology Today therapist profiles. Make minimal changes to existing content while keeping 95-99% of the original text. CRITICAL: Maintain the original character count as much as possible. Count characters exactly and ensure content meets the specified limits without significantly reducing the original length. MOST IMPORTANT: DO NOT reduce character count from original content - preserve exact same length."""
+        system_message = """You are a content editor for Psychology Today therapist profiles. Make minimal changes to existing content while keeping 95-99% of the original text. CRITICAL: Change ONLY ONE sentence at a time in each section, keeping all other sentences completely unchanged. Maintain the original character count as much as possible. Count characters exactly and ensure content meets the specified limits without significantly reducing the original length. MOST IMPORTANT: DO NOT reduce character count from original content - preserve exact same length."""
         
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4-turbo",
             messages=[
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": prompt}
@@ -162,7 +164,8 @@ You are an expert psychologist and content writer specializing in mental health 
 **Task:** Make MINIMAL changes to content for Psychology Today profile.
 
 **STRICT REQUIREMENTS:**
-- Keep 95-99% of original content unchanged
+- Change ONLY ONE sentence at a time in the content
+- Keep ALL other sentences completely unchanged
 - Maintain original character count as much as possible
 - Only adjust tone for warmth and professionalism
 - DO NOT summarize or condense
@@ -174,7 +177,7 @@ You are an expert psychologist and content writer specializing in mental health 
 - DO NOT combine multiple sentences into one
 - Maintain exact sentence structure and flow
 - The tone must be warm and empathetic
-
+- CRITICAL: Select only ONE sentence to modify, leave all others identical
 
 **CHARACTER LIMIT (MAXIMUM):** MAX 400 chars
 
@@ -182,11 +185,12 @@ You are an expert psychologist and content writer specializing in mental health 
 - top_specialties: "{top_specialties}"
 
 **Instructions:**
-1. Keep almost all original content
-2. Make only small tone adjustments
-3. Count characters exactly
-4. Preserve exact same number of words and sentences
-5. Only trim if exceeds maximum limit
+1. Identify ONE sentence that needs improvement
+2. Modify ONLY that one sentence for better tone/warmth
+3. Keep ALL other sentences exactly the same
+4. Count characters exactly
+5. Preserve exact same number of words and sentences
+6. Only trim if exceeds maximum limit
 
 Return JSON with this key:
 {{
@@ -194,10 +198,10 @@ Return JSON with this key:
 }}
 """
 
-        system_message = """You are a content editor for Psychology Today therapist profiles. Make minimal changes to existing content while keeping 95-99% of the original text. CRITICAL: Maintain the original character count as much as possible. Count characters exactly and ensure content meets the specified limit without significantly reducing the original length. MOST IMPORTANT: DO NOT reduce character count from original content - preserve exact same length."""
+        system_message = """You are a content editor for Psychology Today therapist profiles. Make minimal changes to existing content while keeping 95-99% of the original text. CRITICAL: Change ONLY ONE sentence at a time, keeping all other sentences completely unchanged. Maintain the original character count as much as possible. Count characters exactly and ensure content meets the specified limit without significantly reducing the original length. MOST IMPORTANT: DO NOT reduce character count from original content - preserve exact same length."""
         
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4-turbo",
             messages=[
                 {"role": "system", "content": system_message},
                 {"role": "user", "content": prompt}
@@ -308,7 +312,7 @@ Return JSON with this key:
 #         """
         
 #         response = client.chat.completions.create(
-#             model="gpt-3.5-turbo",
+#             model="gpt-4-turbo",
 #             messages=[
 #                 {"role": "system", "content": "You are an expert therapist and content writer specializing in mental health marketing and profile optimization. Create authentic, empathetic, and conversion-focused content that builds trust with potential clients. Always return valid JSON format with all required keys and do not include any other text or comments or child key."},
 #                 {"role": "user", "content": prompt}
