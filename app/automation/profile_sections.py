@@ -151,6 +151,10 @@ def update_personal_statement(page, username: str) -> Dict[str, dict]:
             save_button.click()
             time.sleep(random.uniform(8, 10))  # Wait for save confirmation
         
+        # Refresh profile page after save (always, regardless of save button)
+        page.goto(WEBSITE_URL + "/profile", timeout=60000)
+        time.sleep(random.uniform(3, 5))  # Wait for page to load
+        
     except Exception as e:
         print(f"Error updating personal statement for {username}: {e}")
     
@@ -547,51 +551,9 @@ def update_primary_location2(page, username: str) -> Dict[str, dict]:
                     time.sleep(random.uniform(5, 10))  # Wait for save confirmation
                     print(f"Saved updated zip code for {username}")
                     
-                    
-                    # Confirm the route after reload
-                    current_url = page.url
-                    print(f"Current URL after reload for {username}: {current_url}")
-                    
-                    # Check if we're on the exact profile page (not a sub-page)
-                    if current_url == WEBSITE_URL + "/profile":
-                        print(f"Successfully confirmed route for {username}: Profile page loaded")
-                        # Reload the profile page
-                        print(f"Reloading profile page for {username}")
-                        page.reload()
-                        time.sleep(random.uniform(5, 8))  # Wait for page to reload
-                        print(f"Profile page reloaded for {username}")
-                    elif "/profile" in current_url:
-                        print(f"Currently on profile sub-page for {username}, navigating to main profile page")
-                        # Navigate to main profile page
-                        page.goto(WEBSITE_URL + "/profile", timeout=60000)
-                        time.sleep(random.uniform(3, 5))  # Wait for page to load
-                        print(f"Navigated to main profile page for {username}")
-                        
-                        # Reload the profile page
-                        print(f"Reloading profile page for {username}")
-                        page.reload()
-                        time.sleep(random.uniform(3, 5))  # Wait for page to reload
-                        print(f"Profile page reloaded for {username}")
-                    else:
-                        print(f"Warning: Route not confirmed for {username}, redirecting to profile page")
-                        # Redirect to profile page if not already there
-                        page.goto(WEBSITE_URL + "/profile", timeout=60000)
-                        time.sleep(random.uniform(3, 5))  # Wait for page to load
-                        print(f"Redirected to profile page for {username}")
-                        
-                        # Reload the profile page
-                        print(f"Reloading profile page for {username}")
-                        page.reload()
-                        time.sleep(random.uniform(3, 5))  # Wait for page to reload
-                        print(f"Profile page reloaded for {username}")
-                    
-                    # Final confirmation
-                    final_url = page.url
-                    print(f"Final URL for {username}: {final_url}")
-                    if final_url == WEBSITE_URL + "/profile":
-                        print(f"Successfully confirmed main profile page for {username}")
-                    else:
-                        print(f"Warning: Not on main profile page for {username}, URL: {final_url}")
+                    # Refresh profile page after save
+                    page.goto(WEBSITE_URL + "/profile", timeout=60000)
+                    time.sleep(random.uniform(3, 5))  # Wait for page to load
                 else:
                     print(f"Save button not found for {username}")
             else:
