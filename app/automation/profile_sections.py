@@ -65,8 +65,13 @@ def update_personal_statement(page, username: str) -> Dict[str, dict]:
         )
         print(f"Generated AI content for {username}: {ai_content}")
 
-        # Fill ideal client field with human-like typing
-        if ideal_client_field.count() > 0:
+        # Randomly select which field to update (only 1 out of 3)
+        fields_to_update = ['ideal_client', 'how_can_help', 'empathy_invitation']
+        selected_field = random.choice(fields_to_update)
+        print(f"Randomly selected field to update: {selected_field}")
+
+        # Fill ideal client field with human-like typing (only if selected)
+        if selected_field == 'ideal_client' and ideal_client_field.count() > 0:
             ideal_client_field.click()
             time.sleep(random.uniform(1, 3))
             
@@ -87,8 +92,8 @@ def update_personal_statement(page, username: str) -> Dict[str, dict]:
             }
             time.sleep(random.uniform(3, 7))  # Think before next field
 
-        # Fill how can help field with human-like typing
-        if how_can_help_field.count() > 0:
+        # Fill how can help field with human-like typing (only if selected)
+        if selected_field == 'how_can_help' and how_can_help_field.count() > 0:
             how_can_help_field.click()
             time.sleep(random.uniform(1, 3))
             
@@ -109,8 +114,8 @@ def update_personal_statement(page, username: str) -> Dict[str, dict]:
             }
             time.sleep(random.uniform(3, 7))
 
-        # Fill empathy invitation field with human-like typing
-        if empathy_field.count() > 0:
+        # Fill empathy invitation field with human-like typing (only if selected)
+        if selected_field == 'empathy_invitation' and empathy_field.count() > 0:
             empathy_field.click()
             time.sleep(random.uniform(1, 3))
             
@@ -131,8 +136,9 @@ def update_personal_statement(page, username: str) -> Dict[str, dict]:
             }
             time.sleep(random.uniform(5, 10))  # Longer pause before saving
 
-        print(f"Successfully filled all textareas with AI-generated content for {username}")
+        print(f"Successfully updated {selected_field} field with AI-generated content for {username}")
         print(f"Updated fields: {list(updated_fields.keys())}")
+        print(f"Unchanged fields: {[field for field in fields_to_update if field != selected_field]}")
 
         # Human-like save behavior
         save_button = page.locator('#button-save-personal-statement')

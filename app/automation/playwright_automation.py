@@ -197,11 +197,12 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
     with sync_playwright() as p:
         # Use headless=True for production, headless=False for debugging
         browser = p.chromium.launch(
-            headless=False,  # Use headless for better stability
+            headless=False,  # Use headless for better stability and performance
             args=[
-                '--no-sandbox',
-                '--disable-dev-shm-usage',
-                '--disable-gpu',
+                '--window-size=1366,768',  # Set browser window size
+                '--no-sandbox',  # Required for AWS/Linux
+                '--disable-dev-shm-usage',  # Required for AWS/Linux
+                '--disable-gpu',  # Required for headless on AWS
                 '--no-first-run',
                 '--disable-extensions',
                 '--disable-plugins',
@@ -211,11 +212,38 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
                 '--disable-web-security',
                 '--disable-features=VizDisplayCompositor',
                 '--disable-blink-features=AutomationControlled',
-                '--disable-ipc-flooding-protection'
+                '--disable-ipc-flooding-protection',
+                # AWS specific optimizations
+                '--disable-setuid-sandbox',  # AWS security
+                '--disable-background-networking',  # Reduce network usage
+                '--disable-default-apps',  # Reduce memory usage
+                '--disable-sync',  # Disable Chrome sync
+                '--disable-translate',  # Disable translation
+                '--hide-scrollbars',  # Hide scrollbars
+                '--mute-audio',  # Mute audio
+                '--no-default-browser-check',  # Skip default browser check
+                '--disable-logging',  # Reduce logging
+                '--disable-permissions-api',  # Disable permissions
+                '--disable-notifications',  # Disable notifications
+                '--disable-popup-blocking',  # Allow popups if needed
+                '--disable-prompt-on-repost',  # Disable repost prompts
+                '--disable-hang-monitor',  # Disable hang monitoring
+                '--disable-client-side-phishing-detection',  # Disable phishing detection
+                '--disable-component-update',  # Disable component updates
+                '--disable-domain-reliability',  # Disable domain reliability
+                '--disable-features=TranslateUI',  # Disable translate UI
+                '--disable-ipc-flooding-protection',  # Disable IPC flooding protection
+                '--memory-pressure-off',  # Disable memory pressure
+                '--max_old_space_size=4096'  # Increase memory limit
             ]
         )
 
-        page = browser.new_page()
+        context = browser.new_context(
+            viewport={'width': 1366, 'height': 768},  # Page viewport size
+            screen={'width': 1366, 'height': 768},    # Screen size
+            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        )
+        page = context.new_page()
         
         # Set longer timeouts
         page.set_default_timeout(60000)  # 60 seconds
@@ -444,14 +472,14 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
             # Step 6: Update profile sections with error handling
             try:
                 # Update Personal Statement
-                # try:
-                #     personal_statement_updates = update_personal_statement(page, username)
-                #     updated_fields.update(personal_statement_updates)
+                try:
+                    personal_statement_updates = update_personal_statement(page, username)
+                    updated_fields.update(personal_statement_updates)
                     print(f"Personal statement updated for {username}")
-                # except Exception as e:
-                #     error_msg = f"Failed to update personal statement: {str(e)}"
-                #     print(error_msg)
-                #     error_details.append(error_msg)
+                except Exception as e:
+                    error_msg = f"Failed to update personal statement: {str(e)}"
+                    print(error_msg)
+                    error_details.append(error_msg)
 
                 # # Update Identity
                 # try:
@@ -581,6 +609,8 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
 
 if __name__ == "__main__":
     # Replace with real credentials or load from a secure source
-    username = "mosharof"
-    password = "12345678aA"
+    # username = "mosharof"
+    # password = "12345678aA"
+    username = "wickerpsych46"
+    password = "Ilovejake10"
     login_and_edit_profile(username, password) 

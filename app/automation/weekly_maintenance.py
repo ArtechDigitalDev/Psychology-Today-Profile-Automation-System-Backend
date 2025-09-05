@@ -5,6 +5,7 @@ Weekly automated maintenance for Psychology Today profiles.
 import asyncio
 import schedule
 import time
+import random
 from datetime import datetime, timedelta, timezone
 from typing import List, Optional
 from sqlalchemy.orm import Session
@@ -14,7 +15,6 @@ from app.models.update_log import UpdateLog
 from app.automation.playwright_automation import login_and_edit_profile
 from app.services.email_service import email_service
 import logging
-import time
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -308,11 +308,12 @@ class WeeklyMaintenanceScheduler:
                     logger.info("Stop signal received. Stopping maintenance cycle.")
                     break
                 
-                # Add 15 second delay between profiles (except for the last one)
+                # Add random delay between profiles (1-15 seconds, except for the last one)
                 if i < len(profiles):
-                    logger.info(f"Waiting 15 seconds before processing next profile...")
+                    delay_seconds = random.randint(1, 15)
+                    logger.info(f"Waiting {delay_seconds} seconds before processing next profile...")
                     # Check for stop signal every 1 second during delay
-                    for _ in range(15):
+                    for _ in range(delay_seconds):
                         if self.should_stop:
                             logger.info("Stop signal received during delay. Stopping maintenance cycle.")
                             break
