@@ -461,16 +461,16 @@ def update_availability(page, username: str) -> Dict[str, dict]:
     
     return updated_fields
 
-def update_primary_location2(page, username: str) -> Dict[str, dict]:
+def update_additional_location(page, username: str) -> Dict[str, dict]:
     """
-    Updates only the zip code in the primary location section with a randomly selected zip code.
+    Updates only the zip code in the additional location section with a randomly selected zip code.
     Returns a dict of updated fields.
     """
     updated_fields = {}
     
     try:
-        # Navigate to primary location page
-        page.goto(WEBSITE_URL + "/profile/primary-location", timeout=60000)
+        # Navigate to additional location page
+        page.goto(WEBSITE_URL + "/profile/additional-location", timeout=60000)
         time.sleep(random.uniform(2, 4))
         
         # Define zip codes for random selection
@@ -529,7 +529,7 @@ def update_primary_location2(page, username: str) -> Dict[str, dict]:
                     current_zip_input.type(char)
                     time.sleep(random.uniform(0.01, 0.03))
                 
-                updated_fields['primary_location_zip'] = {
+                updated_fields['additional_location_zip'] = {
                     "old": current_zip,
                     "new": str(new_zip_code)
                 }
@@ -550,16 +550,20 @@ def update_primary_location2(page, username: str) -> Dict[str, dict]:
                     print("clicked save")
                     time.sleep(random.uniform(5, 10))  # Wait for save confirmation
                     print(f"Saved updated zip code for {username}")
-                    
-                    # Refresh profile page after save
-                    page.goto(WEBSITE_URL + "/profile", timeout=60000)
-                    time.sleep(random.uniform(3, 5))  # Wait for page to load
                 else:
                     print(f"Save button not found for {username}")
+                
+                # Refresh profile page after save (always, regardless of save button)
+                page.goto(WEBSITE_URL + "/profile", timeout=60000)
+                time.sleep(random.uniform(5, 7))  # Wait for page to load
             else:
                 print(f"No different zip codes available for {username} (all zip codes are the same as current)")
         else:
             print(f"Zip code input field not found for {username}")
+            page.goto(WEBSITE_URL + "/profile", timeout=60000)
+            time.sleep(random.uniform(5, 7))  # Wait for page to load
+            
+
             
     except Exception as e:
         print(f"Error updating zip code for {username}: {e}")

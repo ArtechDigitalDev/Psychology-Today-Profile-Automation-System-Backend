@@ -48,8 +48,8 @@ You are an expert psychologist and content writer specializing in mental health 
 
 **CHARACTER LIMITS (MAXIMUM):**
 - ideal_client: MAX 600 chars
-- how_can_help: MAX 360 chars
-- empathy_invitation: MAX 360 chars
+- how_can_help: MAX 330 chars
+- empathy_invitation: MAX 330 chars
 
 **Original Content:**
 - ideal_client: "{ideal_client}"
@@ -66,13 +66,13 @@ You are an expert psychologist and content writer specializing in mental health 
 
 Return JSON with these keys:
 {{
-    "ideal_client": "content (MAX 600 chars)",
-    "how_can_help": "content (MAX 360 chars)",
-    "empathy_invitation": "content (MAX 360 chars)"
+    "ideal_client": "content (MAX 620 chars)",
+    "how_can_help": "content (MAX 330 chars)",
+    "empathy_invitation": "content (MAX 330 chars)"
 }}
 """
 
-        system_message = """You are a content editor for Psychology Today therapist profiles. Make minimal changes to existing content while keeping 95-99% of the original text. CRITICAL: Change ONLY ONE sentence at a time in each section, keeping all other sentences completely unchanged. Maintain the original character count as much as possible. Count characters exactly and ensure content meets the specified limits without significantly reducing the original length. MOST IMPORTANT: DO NOT reduce character count from original content - preserve exact same length."""
+        system_message = """You are a content editor for Psychology Today therapist profiles. Make minimal modifications to existing content while keeping 75-90% of the original text. CRITICAL: Modify ONLY ONE sentence at a time in each section, keeping all other sentences completely unchanged. IMPORTANT: You MUST modify at least one sentence - do not return the exact same content. Identify which specific sentence you are modifying and make a meaningful but subtle modification to it. Maintain the original character count as much as possible. Count characters exactly and ensure content meets the specified limits without significantly reducing the original length. MOST IMPORTANT: DO NOT reduce character count from original content - preserve exact same length."""
         
         response = client.chat.completions.create(
             model="gpt-4-turbo",
@@ -99,14 +99,14 @@ Return JSON with these keys:
             empathy_invitation = parsed_content.get("empathy_invitation", "")
             
             # Validate character limits and log for debugging
-            print(f"ideal_client length: {len(ideal_client)} (MAX: 600)")
-            print(f"how_can_help length: {len(how_can_help)} (MAX: 360)")
-            print(f"empathy_invitation length: {len(empathy_invitation)} (MAX: 360)")
+            print(f"ideal_client length: {len(ideal_client)} (MAX: 620)")
+            print(f"how_can_help length: {len(how_can_help)} (MAX: 330)")
+            print(f"empathy_invitation length: {len(empathy_invitation)} (MAX: 330)")
             
             # Check if content meets character requirements and trim if necessary
-            if len(ideal_client) > 600:
+            if len(ideal_client) > 640:
                 print(f"WARNING: ideal_client exceeds maximum: {len(ideal_client)}")
-                ideal_client = ideal_client[:597] + "..."
+                ideal_client = ideal_client[:637] + "..."
                 print(f"Trimmed ideal_client to: {len(ideal_client)} characters")
                 
             if len(how_can_help) > 360:

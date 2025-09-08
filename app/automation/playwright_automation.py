@@ -16,7 +16,7 @@ from app.automation.profile_sections import (
     update_top_specialties,
     update_my_identity,
     update_availability,
-    update_primary_location2,
+    update_additional_location,
 )
 
 # Fix for Windows asyncio subprocess issue
@@ -491,15 +491,15 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
                 #     print(error_msg)
                 #     error_details.append(error_msg)
 
-                # # Update Primary Location
-                # try:
-                #     primary_location_updates = update_primary_location2(page, username)
-                #     updated_fields.update(primary_location_updates)
-                #     print(f"Primary location updated for {username}")
-                # except Exception as e:
-                #     error_msg = f"Failed to update primary location: {str(e)}"
-                #     print(error_msg)
-                #     error_details.append(error_msg)
+                # Update Additional Location
+                try:
+                    additional_location_updates = update_additional_location(page, username)
+                    updated_fields.update(additional_location_updates)
+                    print(f"Additional location updated for {username}")
+                except Exception as e:
+                    error_msg = f"Failed to update additional location: {str(e)}"
+                    print(error_msg)
+                    error_details.append(error_msg)
 
 
                 # # Update Availability
