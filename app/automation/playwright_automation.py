@@ -197,7 +197,7 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
     with sync_playwright() as p:
         # Use headless=True for production, headless=False for debugging
         browser = p.chromium.launch(
-            headless=False,  # Use headless for better stability and performance
+            headless=True,  # Use headless for better stability and performance
             args=[
                 '--window-size=1366,768',  # Set browser window size
                 '--no-sandbox',  # Required for AWS/Linux
