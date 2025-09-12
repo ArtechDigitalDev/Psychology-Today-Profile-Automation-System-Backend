@@ -197,7 +197,7 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
     with sync_playwright() as p:
         # Use headless=True for production, headless=False for debugging
         browser = p.chromium.launch(
-            headless=True,  # Use headless for better stability and performance
+            headless=False,  # Use headless for better stability and performance
             args=[
                 '--window-size=1366,768',  # Set browser window size
                 '--no-sandbox',  # Required for AWS/Linux
@@ -472,14 +472,14 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
             # Step 6: Update profile sections with error handling
             try:
                 # Update Personal Statement
-                try:
-                    personal_statement_updates = update_personal_statement(page, username)
-                    updated_fields.update(personal_statement_updates)
-                    print(f"Personal statement updated for {username}")
-                except Exception as e:
-                    error_msg = f"Failed to update personal statement: {str(e)}"
-                    print(error_msg)
-                    error_details.append(error_msg)
+                # try:
+                #     personal_statement_updates = update_personal_statement(page, username)
+                #     updated_fields.update(personal_statement_updates)
+                #     print(f"Personal statement updated for {username}")
+                # except Exception as e:
+                #     error_msg = f"Failed to update personal statement: {str(e)}"
+                #     print(error_msg)
+                #     error_details.append(error_msg)
 
                 # # Update Identity
                 # try:
@@ -492,25 +492,25 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
                 #     error_details.append(error_msg)
 
                 # Update Additional Location
-                try:
-                    additional_location_updates = update_additional_location(page, username)
-                    updated_fields.update(additional_location_updates)
-                    print(f"Additional location updated for {username}")
-                except Exception as e:
-                    error_msg = f"Failed to update additional location: {str(e)}"
-                    print(error_msg)
-                    error_details.append(error_msg)
-
-
-                # # Update Availability
                 # try:
-                #     availability_updates = update_availability(page, username)
-                #     updated_fields.update(availability_updates)
-                #     print(f"Availability updated for {username}")
+                #     additional_location_updates = update_additional_location(page, username)
+                #     updated_fields.update(additional_location_updates)
+                #     print(f"Additional location updated for {username}")
                 # except Exception as e:
-                #     error_msg = f"Failed to update availability: {str(e)}"
+                #     error_msg = f"Failed to update additional location: {str(e)}"
                 #     print(error_msg)
                 #     error_details.append(error_msg)
+
+
+                # Update Availability
+                try:
+                    availability_updates = update_availability(page, username)
+                    updated_fields.update(availability_updates)
+                    print(f"Availability updated for {username}")
+                except Exception as e:
+                    error_msg = f"Failed to update availability: {str(e)}"
+                    print(error_msg)
+                    error_details.append(error_msg)
                 
                 # # Update Specialties
                 # try:

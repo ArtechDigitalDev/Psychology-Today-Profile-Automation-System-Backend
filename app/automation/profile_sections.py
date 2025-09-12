@@ -392,9 +392,8 @@ def update_availability(page, username: str) -> Dict[str, dict]:
         
         # Define the three availability options
         availability_options = [
-            "Yes, I am accepting new clients",
-            "No, I am not accepting new clients", 
-            "I have a waitlist"
+            "Both in person and online",
+            "Online only"
         ]
         
         # First, check which option is currently selected

@@ -215,9 +215,19 @@ class WeeklyMaintenanceScheduler:
         for attempt in range(max_retries):
             try:
                 logger.info(f"Starting automation for {profile.pt_username} (attempt {attempt + 1}/{max_retries})")
+                
+                # Force memory cleanup before starting new profile
+                import gc
+                gc.collect()
+                logger.info(f"Memory cleaned up before processing {profile.pt_username}")
+                
                 # Call the automation function, get updated fields
                 updated_fields = login_and_edit_profile(profile.pt_username, password)
                 logger.info(f"Automation completed for {profile.pt_username}. Updated fields: {updated_fields}")
+                
+                # Force memory cleanup after profile completion
+                gc.collect()
+                logger.info(f"Memory cleaned up after processing {profile.pt_username}")
                 
                 # Check if any fields were actually updated
                 if updated_fields and len(updated_fields) > 0:
@@ -355,14 +365,14 @@ class WeeklyMaintenanceScheduler:
         print("Scheduler started")
 
         # Schedule weekly maintenance (every Sunday at 2 AM)
-        schedule.every().monday.at("14:00").do(self.run_weekly_maintenance)
+        # schedule.every().monday.at("14:00").do(self.run_weekly_maintenance)
 
         
         # Also schedule for immediate testing
         # schedule.every().day.at("14:00").do(self.run_weekly_maintenance)
         # schedule.every(1).minutes.do(lambda: print("Test: ১ মিনিট হয়ে গেছে!"))
 
-        # schedule.every(30).seconds.do(self.run_weekly_maintenance)
+        schedule.every(10).seconds.do(self.run_weekly_maintenance)
         
         # logger.info("Weekly maintenance scheduler started")
         # logger.info("Maintenance scheduled for every Sunday at 2:00 AM")
@@ -370,7 +380,9 @@ class WeeklyMaintenanceScheduler:
         # Run the scheduler loop
         while self.is_running:
             schedule.run_pending()
-            time.sleep(60)  # Check every 60 seconds (1 minute)
+            # time.sleep(60)  # Check every 60 seconds (1 minute)
+            time.sleep(2)
+            print("Waiting for 2 seconds")
     
     def stop_scheduler(self):
         """Stop the scheduler."""
