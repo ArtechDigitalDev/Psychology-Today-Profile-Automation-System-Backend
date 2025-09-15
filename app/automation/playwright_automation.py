@@ -17,6 +17,7 @@ from app.automation.profile_sections import (
     update_my_identity,
     update_availability,
     update_additional_location,
+    update_fees,
 )
 
 # Fix for Windows asyncio subprocess issue
@@ -175,7 +176,7 @@ def handle_login_errors(page, username: str) -> Tuple[bool, Optional[str]]:
         return True, f"Login error detection failed: {str(e)}"
 
 
-def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
+def login_and_edit_profile(username: str, password: str, fee_toggle_positive: bool = True) -> Dict[str, dict]:
     """
     Logs into Psychology Today using Playwright, navigates to the dashboard, and updates profile with AI content.
     Returns a dict of updated fields: {field: {"old": old_value, "new": new_value}}
@@ -468,6 +469,7 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
             
             # time.sleep(random.uniform(3, 5))
 
+# #############################################################################################################################################
 
             # Step 6: Update profile sections with error handling
             try:
@@ -503,12 +505,22 @@ def login_and_edit_profile(username: str, password: str) -> Dict[str, dict]:
 
 
                 # Update Availability
+                # try:
+                #     availability_updates = update_availability(page, username)
+                #     updated_fields.update(availability_updates)
+                #     print(f"Availability updated for {username}")
+                # except Exception as e:
+                #     error_msg = f"Failed to update availability: {str(e)}"
+                #     print(error_msg)
+                #     error_details.append(error_msg)
+
+                # Update Fees
                 try:
-                    availability_updates = update_availability(page, username)
-                    updated_fields.update(availability_updates)
-                    print(f"Availability updated for {username}")
+                    fees_updates = update_fees(page, username, fee_toggle_positive)
+                    updated_fields.update(fees_updates)
+                    print(f"Fees updated for {username}")
                 except Exception as e:
-                    error_msg = f"Failed to update availability: {str(e)}"
+                    error_msg = f"Failed to update fees: {str(e)}"
                     print(error_msg)
                     error_details.append(error_msg)
                 

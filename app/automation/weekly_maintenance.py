@@ -30,6 +30,18 @@ class WeeklyMaintenanceScheduler:
         self.should_stop = False  # Flag to stop maintenance immediately
         self.db = next(get_db())
     
+    def get_week_based_toggle_state(self) -> bool:
+        """
+        Determine toggle state based on week number.
+        Week 1: +5 (True), Week 2: -5 (False), Week 3: +5 (True), etc.
+        """
+        # Get the current week number of the year
+        current_week = datetime.now().isocalendar()[1]
+        
+        # Alternate between True (+5) and False (-5) based on week number
+        # Odd weeks: True (+5), Even weeks: False (-5)
+        return current_week % 2 == 1
+    
     def get_active_profiles(self) -> List[Profile]:
         """Get all active profiles that need maintenance."""
         return self.db.query(Profile).filter(
@@ -221,8 +233,12 @@ class WeeklyMaintenanceScheduler:
                 gc.collect()
                 logger.info(f"Memory cleaned up before processing {profile.pt_username}")
                 
-                # Call the automation function, get updated fields
-                updated_fields = login_and_edit_profile(profile.pt_username, password)
+                # Get the week-based toggle state (same for all profiles in this week)
+                fee_toggle_positive = self.get_week_based_toggle_state()
+                logger.info(f"Week-based toggle state for {profile.pt_username}: {'+5' if fee_toggle_positive else '-5'}")
+                
+                # Call the automation function with week-based toggle state
+                updated_fields = login_and_edit_profile(profile.pt_username, password, fee_toggle_positive)
                 logger.info(f"Automation completed for {profile.pt_username}. Updated fields: {updated_fields}")
                 
                 # Force memory cleanup after profile completion

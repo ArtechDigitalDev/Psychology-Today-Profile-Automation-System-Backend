@@ -4,7 +4,7 @@ Contains all the individual profile section update functions for Psychology Toda
 """
 import random
 import time
-from typing import Dict
+from typing import Dict, Tuple
 from app.services.ai_content import personal_statement_content
 
 
@@ -452,6 +452,13 @@ def update_availability(page, username: str) -> Dict[str, dict]:
                 save_button.click()
                 time.sleep(random.uniform(8, 10))  # Wait for save confirmation
                 print(f"Saved availability for {username}")
+            else:
+                print(f"Save button not found for {username}, but continuing...")
+            
+            # Always refresh profile page after save (whether save button found or not)
+            page.goto(WEBSITE_URL + "/profile", timeout=60000)
+            time.sleep(random.uniform(3, 5))  # Wait for page to load
+            print(f"Profile page refreshed for {username}")
         else:
             print(f"Could not find radio button for option: {selected_option}")
             
@@ -692,6 +699,105 @@ def update_my_identity(page, username: str) -> Dict[str, dict]:
         
     except Exception as e:
         print(f"Error updating identity for {username}: {e}")
+    
+    return updated_fields
+
+
+def update_fees(page, username: str, fee_toggle_positive: bool = True) -> Dict[str, dict]:
+    """
+    Updates the fees section by modifying the individual session cost with a +/-5 toggle.
+    Returns a dict of updated fields.
+    """
+    updated_fields = {}
+    
+    try:
+        print(f"Starting fees update for {username}")
+        
+        # Navigate to the fees page
+        page.goto(WEBSITE_URL + "/profile/fees", timeout=60000)
+        time.sleep(random.uniform(8, 15))  # Human-like page load wait
+        
+        # Human-like scrolling and reading behavior
+        page.mouse.wheel(0, random.randint(200, 500))  # Scroll down a bit
+        time.sleep(random.uniform(2, 4))
+        
+        # Find the individual session cost input field
+        cost_input = page.locator('div.costInput__input input[aria-label="Individual Session Cost"]')
+        
+        if cost_input.count() > 0:
+            # Get current fee value
+            current_fee = cost_input.input_value()
+            print(f"Current fee for {username}: {current_fee}")
+            
+            # Convert to integer for calculation
+            try:
+                current_fee_int = int(current_fee) if current_fee else 0
+            except ValueError:
+                current_fee_int = 0
+                print(f"Could not parse current fee '{current_fee}', using 0 as default")
+            
+            # Use the toggle amount passed from weekly maintenance
+            # The toggle state is determined per week, not per profile
+            toggle_amount = 5 if fee_toggle_positive else -5
+            
+            new_fee = current_fee_int + toggle_amount
+            
+            # Ensure fee doesn't go below 0
+            if new_fee < 0:
+                new_fee = 0
+                toggle_amount = -current_fee_int  # Adjust toggle to actual change
+            
+            print(f"Applying alternating toggle of {toggle_amount} to fee: {current_fee_int} -> {new_fee}")
+            
+            # Click on the input field
+            cost_input.click()
+            time.sleep(random.uniform(1, 3))
+            
+            # Clear existing content first (human-like)
+            page.keyboard.press("Control+a")
+            time.sleep(random.uniform(0.5, 1.5))
+            page.keyboard.press("Backspace")
+            time.sleep(random.uniform(1, 2))
+            
+            # Type the new fee with human-like delays
+            for char in str(new_fee):
+                page.keyboard.type(char)
+                time.sleep(random.uniform(0.01, 0.05))  # Random typing speed
+            
+            updated_fields['individual_session_cost'] = {
+                "old": str(current_fee_int),
+                "new": str(new_fee)
+            }
+            
+            print(f"Successfully updated fee for {username}: {current_fee_int} -> {new_fee}")
+            time.sleep(random.uniform(3, 7))  # Think before saving
+            
+            # Human-like save behavior
+            save_button = page.locator('#button-actionbar-save')
+            if save_button.count() > 0:
+                # Hover over save button first
+                save_button.hover()
+                time.sleep(random.uniform(1, 3))
+                
+                # Click save
+                save_button.click()
+                time.sleep(random.uniform(8, 10))  # Wait for save confirmation
+                print(f"Saved updated fee for {username}")
+            else:
+                print(f"Save button not found for {username}")
+            
+            # Refresh profile page after save (always, regardless of save button)
+            page.goto(WEBSITE_URL + "/profile", timeout=60000)
+            time.sleep(random.uniform(3, 5))  # Wait for page to load
+            
+        else:
+            print(f"Individual session cost input field not found for {username}")
+            # Navigate back to profile page if field not found
+            page.goto(WEBSITE_URL + "/profile", timeout=60000)
+            time.sleep(random.uniform(3, 5))
+        
+    except Exception as e:
+        print(f"Error updating fees for {username}: {e}")
     
     return updated_fields
 

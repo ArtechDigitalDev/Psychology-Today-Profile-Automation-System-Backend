@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     SMTP_SERVER: str = "smtp.gmail.com"
     SMTP_PORT: int = 465
     SMTP_USERNAME: str = "amy@wickerpsychotherapy.com"
-    SMTP_PASSWORD: str = "zwpx ryzx clvo ojos"
+    SMTP_PASSWORD: str = "zwpx ryzx clvo ojoss"
     SENDER_EMAIL: str = "amy@wickerpsychotherapy.com"
     SENDER_NAME: str = "Profile Automation System"
     ADMIN_EMAIL: str = "amy@wickerpsychotherapy.com"
